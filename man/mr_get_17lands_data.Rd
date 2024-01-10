@@ -12,7 +12,10 @@ mr_get_17lands_data(
   skip = "__auto__",
   select = NULL,
   drop = NULL,
-  n_threads = data.table::getDTthreads()
+  n_threads = data.table::getDTthreads(),
+  use_cache = TRUE,
+  reset_cache = FALSE,
+  cache_dir = mr_cache_dir()
 )
 }
 \arguments{
@@ -33,6 +36,13 @@ or "sealed".}
 \item{drop}{Vector of column names or numbers to drop; keeps the rest.}
 
 \item{n_threads}{The number of threads to use.}
+
+\item{use_cache}{Logical; should the cache be used?}
+
+\item{reset_cache}{Logical: should any existing file be deleted before
+downloading?}
+
+\item{cache_dir}{Path to the folder used for caching data.}
 }
 \value{
 Dataframe
@@ -43,6 +53,14 @@ Download data from 17lands and load it into R
 \details{
 Arguments \code{nrows}, \code{skip}, \code{select}, \code{drop}, and \code{n_threads} are passed to
 data.table::fread(); for details, see \code{?data.table::fread()}.
+
+Arguments \code{use_cache}, \code{clear_cache}, and \code{cache_dir} are used to control
+the cache. This can save time if you need to load the same data more than
+once. By setting \code{use_cache = TRUE}, data will be loaded from any
+existing downloaded file instead of downloading it again. If you suspect
+the data on 17lands has been recently updated and want to use it, you should
+set \code{reset_cache = TRUE} to overwrite any previously downloaded file with the
+new one.
 }
 \examples{
 mr_get_17lands_data("KTK", "game", "premier")
