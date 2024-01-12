@@ -10,7 +10,7 @@ mr_cache_dir(dir = tools::R_user_dir("magicr"))
 \item{dir}{directory to be used as the cache directory}
 }
 \description{
-A configurable default location for persistent data storage
+A configurable default location for persistent data storage.
 }
 \details{
 This function is intended to be called internally with no

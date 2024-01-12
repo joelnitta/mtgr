@@ -2,7 +2,7 @@
 % Please edit documentation in R/mr_get_17lands.R
 \name{mr_get_sets}
 \alias{mr_get_sets}
-\title{Get 17lands data}
+\title{Get a list of Magic the Gathering sets}
 \usage{
 mr_get_sets()
 }
@@ -15,6 +15,7 @@ Print a dataframe of expansion set codes and names.
 \details{
 Only includes expansion sets that have already been released.
 For access to complete set data, see scryr::scry_sets().
+Not all sets have data available on 17lands.
 }
 \examples{
 mr_get_sets()

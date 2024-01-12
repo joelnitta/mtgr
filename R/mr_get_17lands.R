@@ -2,51 +2,40 @@
 #'
 #' Internal function
 #'
-#' @param set Set abbreviation or name. If name, can be a partial but must
-#' match exactly to a single set name. Not case-sensitive.
+#' @param set Set abbreviation or name.
 #' @param data_type Type of data. Must be one of "game", "draft", or "replay".
 #' @param event_type Type of event. Must be one of "premier", "traditional",
-#' or "sealed".
+#' "sealed", or "quick". Not all formats are available for all event types (in
+#' particular, Quick Draft is only available for one set at the time of
+#' writing).
 #' @return Character
 #' @noRd
+# https://17lands-public.s3.amazonaws.com/analysis_data/
+# draft_data/draft_data_public.KTK.PremierDraft.csv.gz
 get_17lands_url <- function(set, data_type, event_type) {
-  base_url_old <- paste0(
-      "https://17lands-public.s3.amazonaws.com/analysis_data/",
-      "%s_data/%s-data.%s.%sDraft.tar.gz",
-      collapse = "")
-  base_url_new <- paste0(
+  base_url <- paste0(
       "https://17lands-public.s3.amazonaws.com/analysis_data/",
       "%s_data/%s_data_public.%s.%sDraft.csv.gz",
       collapse = "")
-  old_sets <- c("VOW", "MID", "AFR", "STX", "KHM")
-  event_lookup <- c("Premier", "Trad", "Sealed")
-  names(event_lookup) <- c("premier", "traditional", "sealed")
-  if (set %in% old_sets) {
-    url <- sprintf(
-      base_url_old,
-      data_type,
-      data_type,
-      set,
-      event_lookup[event_type]
-    )
-  } else {
-    url <- sprintf(
-      base_url_new,
-      data_type,
-      data_type,
-      set,
-      event_lookup[event_type]
-    )
-  }
+  event_lookup <- c("Premier", "Trad", "Sealed", "Quick")
+  names(event_lookup) <- c("premier", "traditional", "sealed", "quick")
+  url <- sprintf(
+    base_url,
+    data_type,
+    data_type,
+    set,
+    event_lookup[event_type]
+  )
   return(url)
 }
 
-#' Get 17lands data
+#' Get a list of Magic the Gathering sets
 #'
 #' Print a dataframe of expansion set codes and names.
 #'
 #' Only includes expansion sets that have already been released.
 #' For access to complete set data, see scryr::scry_sets().
+#' Not all sets have data available on 17lands.
 #'
 #' @return Dataframe
 #' @export
@@ -63,7 +52,7 @@ mr_get_sets <- function() {
 
 #' Set the cache directory
 #'
-#' A configurable default location for persistent data storage
+#' A configurable default location for persistent data storage.
 #'
 #' @param dir directory to be used as the cache directory
 #' @details This function is intended to be called internally with no
@@ -84,32 +73,37 @@ mr_cache_dir <- function(dir = tools::R_user_dir("magicr")) {
 
 #' Get 17lands data
 #'
-#' Download data from 17lands and load it into R
+#' Download data from 17lands and load it into R.
+#'
+#' Not all sets or combinations of data types are available. To see the
+#' available files, visit <https://www.17lands.com/public_datasets>.
 #'
 #' Arguments `nrows`, `skip`, `select`, `drop`, and `n_threads` are passed to
-#' data.table::fread(); for details, see `?data.table::fread()`.
+#' `data.table::fread()`; for details, run `?data.table::fread()`.
 #'
 #' Arguments `use_cache`, `clear_cache`, and `cache_dir` are used to control
 #' the cache. This can save time if you need to load the same data more than
 #' once. By setting `use_cache = TRUE`, data will be loaded from any
 #' existing downloaded file instead of downloading it again. If you suspect
 #' the data on 17lands has been recently updated and want to use it, you should
-#' set `reset_cache = TRUE` to overwrite any previously downloaded file with the
+#' set `overwrite = TRUE` to overwrite any previously downloaded file with the
 #' new one.
 #'
-#' @param set Set abbreviation. Not case-sensitive. For a list of all set
-#' abbreviations, run mr_get_sets(). Not all sets are available on 17lands.
+#' @param set Three-letter set code. Not case-sensitive. For a complete list of
+#' set names and codes, run `mr_get_sets()` (not all sets are available on
+#' 17lands).
 #' @param data_type Type of data. Must be one of "game", "draft", or "replay".
 #' @param event_type Type of event. Must be one of "premier", "traditional",
-#' or "sealed".
+#' "sealed", or "quick". Not all formats are available for all event types (in
+#' particular, Quick Draft is only available for one set at the time of
+#' writing).
 #' @param nrows Number of rows to load.
 #' @param skip Number of rows to skip from top before loading data.
 #' @param select A vector of column names or numbers to keep; drops the rest.
 #' @param drop Vector of column names or numbers to drop; keeps the rest.
 #' @param n_threads The number of threads to use.
 #' @param use_cache Logical; should the cache be used?
-#' @param reset_cache Logical: should any existing file be deleted before
-#'   downloading?
+#' @param overwrite Logical: should any existing file be overwritten?
 #' @param cache_dir Path to the folder used for caching data.
 #'
 #' @return Dataframe
@@ -124,18 +118,18 @@ mr_get_17lands_data <- function(
   drop = NULL,
   n_threads = data.table::getDTthreads(),
   use_cache = TRUE,
-  reset_cache = FALSE,
+  overwrite = FALSE,
   cache_dir = mr_cache_dir()
   ) {
 
   set <- toupper(set)
-
+  event_type <- tolower(event_type)
   url <- get_17lands_url(set, data_type, event_type)
   file_name <- sub(".*/", "", url)
 
   if (isTRUE(use_cache)) {
     file_path <- fs::path(cache_dir, file_name)
-    if (isTRUE(reset_cache) && file.exists(file_path)) {
+    if (isTRUE(overwrite) && file.exists(file_path)) {
       fs::file_delete(file_path)
     }
     if (!file.exists(file_path)) {

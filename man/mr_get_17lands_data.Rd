@@ -14,18 +14,21 @@ mr_get_17lands_data(
   drop = NULL,
   n_threads = data.table::getDTthreads(),
   use_cache = TRUE,
-  reset_cache = FALSE,
+  overwrite = FALSE,
   cache_dir = mr_cache_dir()
 )
 }
 \arguments{
-\item{set}{Set abbreviation. Not case-sensitive. For a list of all set
-abbreviations, run mr_get_sets(). Not all sets are available on 17lands.}
+\item{set}{Three-letter set code. Not case-sensitive. For a complete list of
+set names and codes, run \code{mr_get_sets()} (not all sets are available on
+17lands).}
 
 \item{data_type}{Type of data. Must be one of "game", "draft", or "replay".}
 
 \item{event_type}{Type of event. Must be one of "premier", "traditional",
-or "sealed".}
+"sealed", or "quick". Not all formats are available for all event types (in
+particular, Quick Draft is only available for one set at the time of
+writing).}
 
 \item{nrows}{Number of rows to load.}
 
@@ -39,8 +42,7 @@ or "sealed".}
 
 \item{use_cache}{Logical; should the cache be used?}
 
-\item{reset_cache}{Logical: should any existing file be deleted before
-downloading?}
+\item{overwrite}{Logical: should any existing file be overwritten?}
 
 \item{cache_dir}{Path to the folder used for caching data.}
 }
@@ -48,18 +50,21 @@ downloading?}
 Dataframe
 }
 \description{
-Download data from 17lands and load it into R
+Download data from 17lands and load it into R.
 }
 \details{
+Not all sets or combinations of data types are available. To see the
+available files, visit \url{https://www.17lands.com/public_datasets}.
+
 Arguments \code{nrows}, \code{skip}, \code{select}, \code{drop}, and \code{n_threads} are passed to
-data.table::fread(); for details, see \code{?data.table::fread()}.
+\code{data.table::fread()}; for details, run \code{?data.table::fread()}.
 
 Arguments \code{use_cache}, \code{clear_cache}, and \code{cache_dir} are used to control
 the cache. This can save time if you need to load the same data more than
 once. By setting \code{use_cache = TRUE}, data will be loaded from any
 existing downloaded file instead of downloading it again. If you suspect
 the data on 17lands has been recently updated and want to use it, you should
-set \code{reset_cache = TRUE} to overwrite any previously downloaded file with the
+set \code{overwrite = TRUE} to overwrite any previously downloaded file with the
 new one.
 }
 \examples{
