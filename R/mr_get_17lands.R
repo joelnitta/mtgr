@@ -105,11 +105,12 @@ mr_cache_dir <- function(dir = tools::R_user_dir("magicr")) {
 #' @param use_cache Logical; should the cache be used?
 #' @param overwrite Logical: should any existing file be overwritten?
 #' @param cache_dir Path to the folder used for caching data.
+#' @param quiet Logical: should messages emitted by this function be silenced?
 #'
 #' @return Dataframe
 #' @export
 #' @examples
-#' mr_get_17lands_data("KTK", "game", "premier")
+#' mr_get_17lands_data("KTK", "game", "premier", select = 1:3)
 mr_get_17lands_data <- function(
   set, data_type, event_type,
   nrows = Inf,
@@ -119,7 +120,8 @@ mr_get_17lands_data <- function(
   n_threads = data.table::getDTthreads(),
   use_cache = TRUE,
   overwrite = FALSE,
-  cache_dir = mr_cache_dir()
+  cache_dir = mr_cache_dir(),
+  quiet = FALSE
   ) {
 
   set <- toupper(set)
@@ -130,18 +132,30 @@ mr_get_17lands_data <- function(
   if (isTRUE(use_cache)) {
     file_path <- fs::path(cache_dir, file_name)
     if (isTRUE(overwrite) && file.exists(file_path)) {
+      cli_alert_info_q(quiet, "Existing file detected, deleting")
       fs::file_delete(file_path)
+      cli_alert_success_q(
+        quiet,
+        "{.path {file_path}} deleted"
+      )
     }
     if (!file.exists(file_path)) {
-      curl::curl_download(url, file_path, mode = "wb", quiet = FALSE)
+      cli_alert_info_q(quiet, "Starting download")
+      curl::curl_download(url, file_path, mode = "wb", quiet = quiet)
+      cli_alert_success_q(quiet, "Data downloaded to {.path {file_path}}")
     }
   } else {
-    file_path <- url
+    file_path <- fs::path(tempdir(), file_name)
+    cli_alert_info_q(quiet, "Starting download")
+    curl::curl_download(url, file_path, mode = "wb", quiet = quiet)
+    cli_alert_success_q(quiet, "Download successful")
   }
 
+  cli_alert_info_q(quiet, "Loading data")
   data <- data.table::fread(
     input = file_path, nrows = nrows, skip = skip, nThread = n_threads,
-    select = select, drop = drop)
+    select = select, drop = drop, showProgress = !quiet)
+  cli_alert_success_q(quiet, "Data loaded")
 
   data
 }

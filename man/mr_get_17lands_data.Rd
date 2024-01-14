@@ -15,7 +15,8 @@ mr_get_17lands_data(
   n_threads = data.table::getDTthreads(),
   use_cache = TRUE,
   overwrite = FALSE,
-  cache_dir = mr_cache_dir()
+  cache_dir = mr_cache_dir(),
+  quiet = FALSE
 )
 }
 \arguments{
@@ -45,6 +46,8 @@ writing).}
 \item{overwrite}{Logical: should any existing file be overwritten?}
 
 \item{cache_dir}{Path to the folder used for caching data.}
+
+\item{quiet}{Logical: should messages emitted by this function be silenced?}
 }
 \value{
 Dataframe
@@ -68,5 +71,5 @@ set \code{overwrite = TRUE} to overwrite any previously downloaded file with the
 new one.
 }
 \examples{
-mr_get_17lands_data("KTK", "game", "premier")
+mr_get_17lands_data("KTK", "game", "premier", select = 1:3)
 }
