@@ -132,30 +132,27 @@ mr_get_17lands_data <- function(
   if (isTRUE(use_cache)) {
     file_path <- fs::path(cache_dir, file_name)
     if (isTRUE(overwrite) && file.exists(file_path)) {
-      cli_alert_info_q(quiet, "Existing file detected, deleting")
+      cli_alert_info_q("Existing file detected, deleting")
       fs::file_delete(file_path)
-      cli_alert_success_q(
-        quiet,
-        "{.path {file_path}} deleted"
-      )
+      cli_alert_success_q("{.path {file_path}} deleted")
     }
     if (!file.exists(file_path)) {
-      cli_alert_info_q(quiet, "Starting download")
+      cli_alert_info_q("Starting download")
       curl::curl_download(url, file_path, mode = "wb", quiet = quiet)
-      cli_alert_success_q(quiet, "Data downloaded to {.path {file_path}}")
+      cli_alert_success_q("Data downloaded to {.path {file_path}}")
     }
   } else {
     file_path <- fs::path(tempdir(), file_name)
-    cli_alert_info_q(quiet, "Starting download")
+    cli_alert_info_q("Starting download")
     curl::curl_download(url, file_path, mode = "wb", quiet = quiet)
-    cli_alert_success_q(quiet, "Download successful")
+    cli_alert_success_q("Download successful")
   }
 
-  cli_alert_info_q(quiet, "Loading data")
+  cli_alert_info_q("Loading data")
   data <- data.table::fread(
     input = file_path, nrows = nrows, skip = skip, nThread = n_threads,
     select = select, drop = drop, showProgress = !quiet)
-  cli_alert_success_q(quiet, "Data loaded")
+  cli_alert_success_q("Data loaded")
 
   data
 }
