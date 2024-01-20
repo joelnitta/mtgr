@@ -134,12 +134,13 @@ mr_get_17lands_data <- function(
     if (isTRUE(overwrite) && file.exists(file_path)) {
       cli_alert_info_q("Existing file detected, deleting")
       fs::file_delete(file_path)
-      cli_alert_success_q("{.path {file_path}} deleted")
+      if (!quiet) cli::cli_alert_success("{.path {file_path}} deleted")
     }
     if (!file.exists(file_path)) {
       cli_alert_info_q("Starting download")
       curl::curl_download(url, file_path, mode = "wb", quiet = quiet)
-      cli_alert_success_q("Data downloaded to {.path {file_path}}")
+      if (!quiet) cli::cli_alert_success(
+        "Data downloaded to {.path {file_path}}")
     }
   } else {
     file_path <- fs::path(tempdir(), file_name)
