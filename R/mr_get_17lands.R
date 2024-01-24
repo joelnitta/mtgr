@@ -71,6 +71,73 @@ mr_cache_dir <- function(dir = tools::R_user_dir("magicr")) {
   dir
 }
 
+#' Download a 17lands data file
+#'
+#' Not all sets or combinations of data types are available. To see the
+#' available files, visit <https://www.17lands.com/public_datasets>.
+#'
+#' @inheritParams mr_get_17lands_data
+#' @return Path to data file
+#' @export
+#' @examples
+#' mr_download_17lands_file("KTK", "game", "premier")
+mr_download_17lands_file <- function(
+  set, data_type, event_type,
+  use_cache = TRUE,
+  overwrite = FALSE,
+  cache_dir = mr_cache_dir(),
+  quiet = FALSE) {
+
+  # Checks
+  assertthat::assert_that(
+    assertthat::is.string(set)
+  )
+  assertthat::assert_that(
+    assertthat::is.string(data_type)
+  )
+  assertthat::assert_that(
+    assertthat::is.string(event_type)
+  )
+  assertthat::assert_that(
+    assertthat::is.flag(use_cache)
+  )
+  assertthat::assert_that(
+    assertthat::is.flag(overwrite)
+  )
+  assertthat::assert_that(
+    assertthat::is.dir(cache_dir)
+  )
+  assertthat::assert_that(
+    assertthat::is.flag(quiet)
+  )
+
+  set <- toupper(set)
+  event_type <- tolower(event_type)
+  url <- get_17lands_url(set, data_type, event_type)
+  file_name <- sub(".*/", "", url)
+
+  if (isTRUE(use_cache)) {
+    file_path <- fs::path(cache_dir, file_name)
+    if (isTRUE(overwrite) && file.exists(file_path)) {
+      cli_alert_info_q("Existing file detected, deleting")
+      fs::file_delete(file_path)
+      if (!quiet) cli::cli_alert_success("{.path {file_path}} deleted")
+    }
+    if (!file.exists(file_path)) {
+      cli_alert_info_q("Starting download")
+      curl::curl_download(url, file_path, mode = "wb", quiet = quiet)
+      if (!quiet) cli::cli_alert_success(
+        "Data downloaded to {.path {file_path}}")
+    }
+  } else {
+    file_path <- fs::path(tempdir(), file_name)
+    cli_alert_info_q("Starting download")
+    curl::curl_download(url, file_path, mode = "wb", quiet = quiet)
+    cli_alert_success_q("Download successful")
+  }
+  file_path
+}
+
 #' Get 17lands data
 #'
 #' Download data from 17lands and load it into R.
@@ -124,31 +191,18 @@ mr_get_17lands_data <- function(
   quiet = FALSE
   ) {
 
-  set <- toupper(set)
-  event_type <- tolower(event_type)
-  url <- get_17lands_url(set, data_type, event_type)
-  file_name <- sub(".*/", "", url)
+  # Download file
+  file_path <- mr_download_17lands_file(
+    set = set,
+    event_type = event_type,
+    data_type = data_type,
+    use_cache = use_cache,
+    overwrite = overwrite,
+    cache_dir = cache_dir,
+    quiet = quiet
+  )
 
-  if (isTRUE(use_cache)) {
-    file_path <- fs::path(cache_dir, file_name)
-    if (isTRUE(overwrite) && file.exists(file_path)) {
-      cli_alert_info_q("Existing file detected, deleting")
-      fs::file_delete(file_path)
-      if (!quiet) cli::cli_alert_success("{.path {file_path}} deleted")
-    }
-    if (!file.exists(file_path)) {
-      cli_alert_info_q("Starting download")
-      curl::curl_download(url, file_path, mode = "wb", quiet = quiet)
-      if (!quiet) cli::cli_alert_success(
-        "Data downloaded to {.path {file_path}}")
-    }
-  } else {
-    file_path <- fs::path(tempdir(), file_name)
-    cli_alert_info_q("Starting download")
-    curl::curl_download(url, file_path, mode = "wb", quiet = quiet)
-    cli_alert_success_q("Download successful")
-  }
-
+  # Load data
   cli_alert_info_q("Loading data")
   data <- data.table::fread(
     input = file_path, nrows = nrows, skip = skip, nThread = n_threads,
