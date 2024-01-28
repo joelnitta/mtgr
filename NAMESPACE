@@ -2,5 +2,8 @@
 
 export(mr_cache_dir)
 export(mr_download_17lands_file)
+export(mr_get_17lands_cols)
 export(mr_get_17lands_data)
 export(mr_get_sets)
+export(mr_make_17lands_schema)
+export(mr_open_17lands_arrow)

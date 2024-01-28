@@ -12,13 +12,26 @@ Authors@R:
 Description: Analyze Magic the Gathering data.
 License: MIT + file LICENSE
 Encoding: UTF-8
-Roxygen: list(markdown = TRUE)
+Roxygen: list(markdown = TRUE, roclets = c("collate", "namespace", "rd",
+    "roxyglobals::global_roclet"))
 RoxygenNote: 7.2.3
 Imports: 
     assertthat,
     cli,
     curl,
     data.table,
+    dplyr,
     fs,
+    fuzzyjoin,
+    glue,
+    readr,
     scryr,
     tools
+Depends: 
+    R (>= 3.5)
+LazyData: true
+Suggests: 
+    arrow,
+    roxyglobals
+Config/roxyglobals/filename: globals.R
+Config/roxyglobals/unique: FALSE
