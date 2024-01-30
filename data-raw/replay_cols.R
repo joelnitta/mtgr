@@ -59,15 +59,6 @@ replay_cols <-
   assertr::assert(assertr::not_na, everything()) %>%
   assertr::assert(assertr::is_uniq, regex)
 
-# Write out for use in package
-# use save() directly until I can troubleshoot usethis::use_data()
-save(
-  replay_cols,
-  file = "data/replay_cols.rda",
-  compress = "bzip2",
-  ascii = FALSE,
-  version = 2,
-  compression_level = 9)
-
-# usethis::use_data(
-#   replay_cols, overwrite = TRUE)
+# Write out data
+usethis::use_data(
+  replay_cols, overwrite = TRUE)
