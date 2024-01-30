@@ -1,0 +1,34 @@
+url: ~
+template:
+  bootstrap: 5
+  bootswatch: litera
+reference:
+- title: "Cache"
+  desc: >
+    Functions for handling locally stored data
+  contents:
+  - mr_cache_dir
+- title: "Downloading data"
+  desc: >
+    Functions that download data
+  contents:
+  - mr_download_17lands_file
+- title: "Getting data into R"
+  desc: >
+    Functions that fetch and load data into R
+  contents:
+  - mr_get_17lands_data
+  - mr_get_17lands_cols
+  - mr_get_sets
+- title: "Arrow"
+  desc: >
+    Functions that facilitate working with the {arrow} package for out-of-memory
+    data
+  contents:
+  - mr_make_17lands_schema
+  - mr_open_17lands_arrow
+- title: "Datasets"
+  desc: >
+    Datasets included with this package, mostly metadata
+  contents:
+  - replay_cols

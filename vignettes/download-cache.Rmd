@@ -1,0 +1,115 @@
+---
+title: "Downloading files and using the cache"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Downloading files and using the cache}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+One of the main purposes of `magicr` is to obtain data about drafts from [17lands.com](https://17lands.com).
+These typically come in the form of rather large, compressed CSV files.
+`magicr` helps you maintain these files by storing them in a folder referred to as the "cache".
+
+Let's see how to use this feature.
+
+## Location of the cache
+
+```{r setup}
+library(magicr)
+```
+
+```{r move-cache, include = FALSE}
+library(fs)
+
+# Temporarily move any files in the cache to a temp dir
+cache_files <- mr_cache_dir() |>
+  dir_ls()
+temp_dir <- path(tempdir(), "magicr_cache")
+if (dir_exists(temp_dir)) dir_delete(temp_dir)
+dir_create(temp_dir)
+file_move(cache_files, temp_dir)
+```
+
+The location of the cache defaults to a location specific to your OS that is designated for storing files related to this package.
+You can see where this is located like this:
+
+```{r cache-loc}
+mr_cache_dir()
+```
+
+Notice that the exact path will differ based on your computer setup.
+
+You can check the current contents of the cache like so:
+
+```{r cache-loc-ls}
+list.files(mr_cache_dir())
+```
+
+## Downloading files to the cache
+
+By default, datasets from [17lands](https://17lands.com) will be downloaded to the cache.
+
+Here, let's download *Khans of Tarkir* game data for Premier Draft to the cache.
+
+```{r cache-download}
+mr_download_17lands_file(set = "KTK", data_type = "game", event_type = "premier")
+list.files(mr_cache_dir())
+```
+
+If you prefer to store the files in a folder of your choosing, you can do that with the `cache_dir` argument:
+
+```{r cache-download-custom}
+mr_download_17lands_file(
+  set = "KTK", data_type = "game", event_type = "premier",
+  cache_dir = tempdir())
+```
+
+## Cached files won't be re-downloaded
+
+The whole point of having a cache is to avoid re-downloading files.
+So if we run `mr_download_17lands_file()` for the same dataset again, it will just return the path to the existing file instead of re-downloading it (you should notice the command runs almost instantaneously this time, whereas the first time it took several seconds to download).
+
+```{r cache-download-again}
+mr_download_17lands_file(set = "KTK", data_type = "game", event_type = "premier")
+```
+
+However, sometimes new data may be available and you **do** want to re-download.
+In that case, set `overwrite = TRUE` to re-download and overwite the existing file:
+
+```{r cache-download-overwrite}
+mr_download_17lands_file(
+  set = "KTK", data_type = "game", event_type = "premier",
+  overwrite = TRUE)
+```
+
+## Files are downloaded automatically when loading into R
+
+The `mr_download_17lands_file()` function is user-facing, but if your goal is to load the data directly into R (which is most likely the case!), you can skip this function and use `mr_get_17lands_data()` instead.
+`mr_get_17lands_data()` will download the necessary data file for you first, then load it.
+And of course it will use the cached file if one is available.
+
+```{r cache-download-load}
+ktk <- mr_get_17lands_data(set = "KTK", data_type = "game", event_type = "premier")
+
+# The dataset is large, so just print out part of it
+dim(ktk)
+ktk[1:6, 1:6]
+```
+
+## Coming soon
+
+I plan to add more functionality to see what is in the cache and clear it out or update the files etc.
+
+```{r put-cache-back, include = FALSE}
+# Put the cached files back
+cache_files_in_temp_dir <- dir_ls(temp_dir)
+file_move(cache_files_in_temp_dir, mr_cache_dir())
+```

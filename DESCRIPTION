@@ -32,6 +32,9 @@ Depends:
 LazyData: true
 Suggests: 
     arrow,
+    knitr,
+    rmarkdown,
     roxyglobals
 Config/roxyglobals/filename: globals.R
 Config/roxyglobals/unique: FALSE
+VignetteBuilder: knitr

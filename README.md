@@ -6,8 +6,8 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of `magicr` is to enable analysis of Magic the Gathering data
-in R.
+The goal of `magicr` is to enable analysis of *Magic: The Gathering*
+data in R.
 
 This package is in **early development**: functionality is likely to
 change!
@@ -31,6 +31,8 @@ mr_get_17lands_data(
   "KTK", "game", "premier",
   # only load a small portion of the data for this demo
   nrows = 10, select = 1:8)
+#> ℹ Loading data
+#> ✔ Data loaded
 #>     expansion   event_type                         draft_id          draft_time
 #>  1:       KTK PremierDraft e794b242c5bb4570a728c8f05bdc5595 2023-12-12 17:12:56
 #>  2:       KTK PremierDraft e794b242c5bb4570a728c8f05bdc5595 2023-12-12 17:12:56

@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of `magicr` is to enable analysis of Magic the Gathering data in R.
+The goal of `magicr` is to enable analysis of *Magic: The Gathering* data in R.
 
 This package is in **early development**: functionality is likely to change!
 
