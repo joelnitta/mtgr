@@ -33,6 +33,7 @@ LazyData: true
 Suggests: 
     arrow,
     knitr,
+    R.utils,
     rmarkdown,
     roxyglobals
 Config/roxyglobals/filename: globals.R
