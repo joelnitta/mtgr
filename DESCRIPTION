@@ -38,3 +38,4 @@ Suggests:
 Config/roxyglobals/filename: globals.R
 Config/roxyglobals/unique: FALSE
 VignetteBuilder: knitr
+URL: https://joelnitta.github.io/magicr/
