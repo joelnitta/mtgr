@@ -115,8 +115,26 @@ can do that with the <code>cache_dir</code> argument:</p>
 <span>  set <span class="op">=</span> <span class="st">"KTK"</span>, data_type <span class="op">=</span> <span class="st">"game"</span>, event_type <span class="op">=</span> <span class="st">"premier"</span>,</span>
 <span>  cache_dir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Starting download</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Data downloaded to <span style="color: #0000BB;">/tmp/RtmpEGT3Sw/game_data_public.KTK.PremierDraft.csv.gz</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BB0000; font-weight: bold;">/tmp/RtmpEGT3Sw/game_data_public.KTK.PremierDraft.csv.gz</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Data downloaded to <span style="color: #0000BB;">/tmp/Rtmpaso3Ml/game_data_public.KTK.PremierDraft.csv.gz</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BB0000; font-weight: bold;">/tmp/Rtmpaso3Ml/game_data_public.KTK.PremierDraft.csv.gz</span></span></span></code></pre></div>
+<p>You can also change the default location of the cache using the
+<code>mr_cache</code> option:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># (save any existing settings first)</span></span>
+<span><span class="va">old_cache_setting</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"mr_cache"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Change location of cache to temporary directory</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>mr_cache <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/mr_cache_dir.html">mr_cache_dir</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "/tmp/Rtmpaso3Ml"</span></span>
+<span></span>
+<span><span class="co"># restore existing settings</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>mr_cache <span class="op">=</span> <span class="va">old_cache_setting</span><span class="op">)</span></span></code></pre></div>
+<p>This way, you don’t have to specify it each time you call a function
+that uses the cache.</p>
+<p>If you want to use this approach, it is recommended to include the
+call to <code><a href="https://rdrr.io/r/base/options.html" class="external-link">options()</a></code> at the top of your script or in your
+<code>.Rprofile</code>.</p>
 </div>
 <div class="section level2">
 <h2 id="cached-files-wont-be-re-downloaded">Cached files won’t be re-downloaded<a class="anchor" aria-label="anchor" href="#cached-files-wont-be-re-downloaded"></a>
@@ -127,14 +145,14 @@ dataset again, it will just return the path to the existing file instead
 of re-downloading it (you should notice the command runs almost
 instantaneously this time, whereas the first time it took several
 seconds to download).</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/mr_download_17lands_file.html">mr_download_17lands_file</a></span><span class="op">(</span>set <span class="op">=</span> <span class="st">"KTK"</span>, data_type <span class="op">=</span> <span class="st">"game"</span>, event_type <span class="op">=</span> <span class="st">"premier"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #BB0000; font-weight: bold;">/home/runner/.local/share/R/magicr/game_data_public.KTK.PremierDraft.csv.gz</span></span></span></code></pre></div>
 <p>However, sometimes new data may be available and you
 <strong>do</strong> want to re-download. In that case, set
 <code>overwrite = TRUE</code> to re-download and overwite the existing
 file:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/mr_download_17lands_file.html">mr_download_17lands_file</a></span><span class="op">(</span></span>
 <span>  set <span class="op">=</span> <span class="st">"KTK"</span>, data_type <span class="op">=</span> <span class="st">"game"</span>, event_type <span class="op">=</span> <span class="st">"premier"</span>,</span>
 <span>  overwrite <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
@@ -154,7 +172,7 @@ likely the case!), you can skip this function and use
 <code><a href="../reference/mr_get_17lands_data.html">mr_get_17lands_data()</a></code> will download the necessary data file
 for you first, then load it. And of course it will use the cached file
 if one is available.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ktk</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mr_get_17lands_data.html">mr_get_17lands_data</a></span><span class="op">(</span>set <span class="op">=</span> <span class="st">"KTK"</span>, data_type <span class="op">=</span> <span class="st">"game"</span>, event_type <span class="op">=</span> <span class="st">"premier"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Loading data</span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Data loaded</span></span>
