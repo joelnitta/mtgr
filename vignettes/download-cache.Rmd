@@ -72,6 +72,24 @@ mr_download_17lands_file(
   cache_dir = tempdir())
 ```
 
+You can also change the default location of the cache using the `mr_cache` option:
+
+```{r cache-loc-change}
+# (save any existing settings first)
+old_cache_setting <- getOption("mr_cache")
+
+# Change location of cache to temporary directory
+options(mr_cache = tempdir())
+mr_cache_dir()
+
+# restore existing settings
+options(mr_cache = old_cache_setting)
+```
+
+This way, you don't have to specify it each time you call a function that uses the cache.
+
+If you want to use this approach, it is recommended to include the call to `options()` at the top of your script or in your `.Rprofile`.
+
 ## Cached files won't be re-downloaded
 
 The whole point of having a cache is to avoid re-downloading files.
@@ -108,7 +126,7 @@ ktk[1:6, 1:6]
 
 I plan to add more functionality to see what is in the cache and clear it out or update the files etc.
 
-```{r put-cache-back, include = FALSE}
+```{r cleanup, include = FALSE}
 # Put the cached files back
 cache_files_in_temp_dir <- dir_ls(temp_dir)
 file_move(cache_files_in_temp_dir, mr_cache_dir())

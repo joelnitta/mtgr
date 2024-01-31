@@ -2,15 +2,18 @@
 % Please edit documentation in R/mr_cache_dir.R
 \name{mr_cache_dir}
 \alias{mr_cache_dir}
-\title{Set the cache directory}
+\title{Check the location of the cache}
 \usage{
-mr_cache_dir(dir = tools::R_user_dir("magicr"))
+mr_cache_dir(
+  dir = getOption("mr_cache", default = tools::R_user_dir("magicr"))
+)
 }
 \arguments{
 \item{dir}{directory to be used as the cache directory}
 }
 \description{
-A configurable default location for persistent data storage.
+To change the default location of the cache, use option \code{mr_cache}
+(see Examples).
 }
 \details{
 This function is intended to be called internally with no
@@ -22,6 +25,11 @@ create the directory if it does not yet exist.
 \examples{
 # Default cache directory
 mr_cache_dir()
-# Custom cache directory (here, temporary directory)
-mr_cache_dir(tempdir())
+# Specify a custom cache directory
+# (save any existing settings first)
+old_cache_setting <- getOption("mr_cache")
+options(mr_cache = tempdir())
+mr_cache_dir()
+# restore existing settings
+options(mr_cache = old_cache_setting)
 }
