@@ -1,4 +1,4 @@
-Package: magicr
+Package: mtgr
 Title: Analyze Magic the Gathering data
 Version: 0.0.0.9000
 Authors@R: 
@@ -39,4 +39,4 @@ Suggests:
 Config/roxyglobals/filename: globals.R
 Config/roxyglobals/unique: FALSE
 VignetteBuilder: knitr
-URL: https://joelnitta.github.io/magicr/
+URL: https://joelnitta.github.io/mtgr/

@@ -1,12 +1,12 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# magicr
+# mtgr
 
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of `magicr` is to enable analysis of *Magic: The Gathering*
+The goal of `mtgr` is to enable analysis of *Magic: The Gathering*
 data in R.
 
 This package is in **early development**: functionality is likely to
@@ -14,10 +14,10 @@ change!
 
 ## Installation
 
-You can install the development version of `magicr` like so:
+You can install the development version of `mtgr` like so:
 
 ``` r
-remotes::install_github("joelnitta/magicr")
+remotes::install_github("joelnitta/mtgr")
 ```
 
 ## Example
@@ -26,7 +26,7 @@ Download some draft game data for *Khans of Tarkir* from
 [17lands.com](https://www.17lands.com)
 
 ``` r
-library(magicr)
+library(mtgr)
 mr_get_17lands_data(
   "KTK", "game", "premier",
   # only load a small portion of the data for this demo
@@ -59,7 +59,7 @@ mr_get_17lands_data(
 
 ## Copyright Notice
 
-`magicr` may include unofficial Fan Content permitted under the [Wizards
+`mtgr` may include unofficial Fan Content permitted under the [Wizards
 of the Coast Fan Content
 Policy](https://company.wizards.com/en/legal/fancontentpolicy). Any
 literal and graphical information presented via this package and its

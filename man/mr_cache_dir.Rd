@@ -4,9 +4,7 @@
 \alias{mr_cache_dir}
 \title{Check the location of the cache}
 \usage{
-mr_cache_dir(
-  dir = getOption("mr_cache", default = tools::R_user_dir("magicr"))
-)
+mr_cache_dir(dir = getOption("mr_cache", default = tools::R_user_dir("mtgr")))
 }
 \arguments{
 \item{dir}{directory to be used as the cache directory}
@@ -19,7 +17,7 @@ To change the default location of the cache, use option \code{mr_cache}
 This function is intended to be called internally with no
 arguments. It will use the default
 location returned by \link[tools:userdir]{tools::R_user_dir} for the application,
-\code{magicr}. This function will also
+\code{mtgr}. This function will also
 create the directory if it does not yet exist.
 }
 \examples{

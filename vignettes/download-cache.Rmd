@@ -14,16 +14,16 @@ knitr::opts_chunk$set(
 )
 ```
 
-One of the main purposes of `magicr` is to obtain data about drafts from [17lands.com](https://17lands.com).
+One of the main purposes of `mtgr` is to obtain data about drafts from [17lands.com](https://17lands.com).
 These typically come in the form of rather large, compressed CSV files.
-`magicr` helps you maintain these files by storing them in a folder referred to as the "cache".
+`mtgr` helps you maintain these files by storing them in a folder referred to as the "cache".
 
 Let's see how to use this feature.
 
 ## Location of the cache
 
 ```{r setup}
-library(magicr)
+library(mtgr)
 ```
 
 ```{r move-cache, include = FALSE}
@@ -32,7 +32,7 @@ library(fs)
 # Temporarily move any files in the cache to a temp dir
 cache_files <- mr_cache_dir() |>
   dir_ls()
-temp_dir <- path(tempdir(), "magicr_cache")
+temp_dir <- path(tempdir(), "mtgr_cache")
 if (dir_exists(temp_dir)) dir_delete(temp_dir)
 dir_create(temp_dir)
 file_move(cache_files, temp_dir)
