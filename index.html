@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="description" content="Analyze Magic the Gathering data.">
-<title>Analyze Magic the Gathering data • magicr</title>
+<title>Analyze Magic the Gathering data • mtgr</title>
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
@@ -24,7 +24,7 @@
 
     <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light"><div class="container">
     
-    <a class="navbar-brand me-2" href="index.html">magicr</a>
+    <a class="navbar-brand me-2" href="index.html">mtgr</a>
 
     <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9000</small>
 
@@ -57,25 +57,25 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="magicr">magicr<a class="anchor" aria-label="anchor" href="#magicr"></a>
+<div class="page-header"><h1 id="mtgr">mtgr<a class="anchor" aria-label="anchor" href="#mtgr"></a>
 </h1></div>
 <!-- badges: start -->
 <!-- badges: end -->
-<p>The goal of <code>magicr</code> is to enable analysis of <em>Magic: The Gathering</em> data in R.</p>
+<p>The goal of <code>mtgr</code> is to enable analysis of <em>Magic: The Gathering</em> data in R.</p>
 <p>This package is in <strong>early development</strong>: functionality is likely to change!</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>You can install the development version of <code>magicr</code> like so:</p>
+<p>You can install the development version of <code>mtgr</code> like so:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"joelnitta/magicr"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"joelnitta/mtgr"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
 <p>Download some draft game data for <em>Khans of Tarkir</em> from <a href="https://www.17lands.com" class="external-link">17lands.com</a></p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://joelnitta.github.io/magicr/" class="external-link">magicr</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://joelnitta.github.io/mtgr/" class="external-link">mtgr</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/mr_get_17lands_data.html">mr_get_17lands_data</a></span><span class="op">(</span></span>
 <span>  <span class="st">"KTK"</span>, <span class="st">"game"</span>, <span class="st">"premier"</span>,</span>
 <span>  <span class="co"># only load a small portion of the data for this demo</span></span>
@@ -108,7 +108,7 @@
 <div class="section level2">
 <h2 id="copyright-notice">Copyright Notice<a class="anchor" aria-label="anchor" href="#copyright-notice"></a>
 </h2>
-<p><code>magicr</code> may include unofficial Fan Content permitted under the <a href="https://company.wizards.com/en/legal/fancontentpolicy" class="external-link">Wizards of the Coast Fan Content Policy</a>. Any literal and graphical information presented via this package and its documentation pages about <em>Magic: The Gathering</em>, including card images, the mana symbols, and Oracle text, is copyright of Wizards of the Coast, LLC, a subsidiary of Hasbro, Inc. This software is not produced by, endorsed by, supported by, or affiliated with Wizards of the Coast, LLC or <a href="https://www.17lands.com" class="external-link">17lands</a>.</p>
+<p><code>mtgr</code> may include unofficial Fan Content permitted under the <a href="https://company.wizards.com/en/legal/fancontentpolicy" class="external-link">Wizards of the Coast Fan Content Policy</a>. Any literal and graphical information presented via this package and its documentation pages about <em>Magic: The Gathering</em>, including card images, the mana symbols, and Oracle text, is copyright of Wizards of the Coast, LLC, a subsidiary of Hasbro, Inc. This software is not produced by, endorsed by, supported by, or affiliated with Wizards of the Coast, LLC or <a href="https://www.17lands.com" class="external-link">17lands</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="license">License<a class="anchor" aria-label="anchor" href="#license"></a>
@@ -128,7 +128,7 @@
 <div class="citation">
 <h2 data-toc-skip>Citation</h2>
 <ul class="list-unstyled">
-<li><a href="authors.html#citation">Citing magicr</a></li>
+<li><a href="authors.html#citation">Citing mtgr</a></li>
 </ul>
 </div>
 
