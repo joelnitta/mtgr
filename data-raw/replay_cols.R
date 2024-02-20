@@ -57,7 +57,13 @@ replay_cols <-
     delim = ", ", names = c("regex", "py_type"), cols = text) %>%
   left_join(py_arrow_lookup_tbl, by = "py_type") %>%
   assertr::assert(assertr::not_na, everything()) %>%
-  assertr::assert(assertr::is_uniq, regex)
+  assertr::assert(assertr::is_uniq, regex) %>%
+  mutate(
+    arrow_type = case_when(
+      regex == "^won$" ~ "string",
+      .default = arrow_type
+    )
+  )
 
 # Write out data
 usethis::use_data(

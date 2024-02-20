@@ -32,3 +32,9 @@ reference:
     Datasets included with this package, mostly metadata
   contents:
   - replay_cols
+articles:
+- title: Articles
+  navbar: ~
+  contents:
+  - download-cache
+  - arrow

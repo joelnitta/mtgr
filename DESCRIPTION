@@ -35,7 +35,8 @@ Suggests:
     knitr,
     R.utils,
     rmarkdown,
-    roxyglobals
+    roxyglobals,
+    scales
 Config/roxyglobals/filename: globals.R
 Config/roxyglobals/unique: FALSE
 VignetteBuilder: knitr

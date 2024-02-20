@@ -1,0 +1,201 @@
+---
+title: "Handling large datasets with arrow"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Handling large datasets with arrow}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup-hide, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+# Custom function for capturing printed output and showing only a portion
+customPrint <- function(...) {
+  output <- capture.output(print(...))
+  cat(output[1:min(length(output), 20)], sep="\n") # Adjust the limit as needed
+}
+
+pretty_num <- function(x) {
+  scales::number(x, big.mark = ",")
+}
+```
+
+The [17lands](https://17lands.com) datasets all tend to be large, but the game replay datasets in particular are so large that they often cannot be loaded into R (depending on your computer's memory).
+
+Fortunately, the [{arrow} R package](https://arrow.apache.org/docs/r/) can work with *external* data files, so we can use it to analyze the game replay data, with the help of some `magicr` functions.
+This vignettes shows how.
+
+```{r setup, message=FALSE, warning=FALSE}
+library(mtgr)
+library(arrow)
+# you could also just do library(tidyverse) for the next three
+library(dplyr)
+library(tibble)
+library(tidyr)
+```
+
+## Get the data
+
+First, let's download a dataset of game replay data to analyze.
+Here, we'll download *Khans of Tarkir*:
+
+```{r download}
+ktk_file <- mr_download_17lands_file(
+  set = "WOE", data_type = "replay", event_type = "premier")
+```
+
+The file is automatically downloaded to the cache (see `vignette("download-cache")` for more details).
+
+Let's check the location and size of the file we just downloaded:
+
+```{r file-size}
+ktk_file
+fs::file_size(ktk_file)
+```
+
+## Open the dataset
+
+Next, we will *open* the dataset.
+
+..notice I did **not** say "load"!
+This is an important distinction when using {arrow}: *opening* a dataset means that we are establishing a connection to the external file, but we are not actually loading it into R.
+
+To open a 17lands game-replay file, use `mr_open_17lands_arrow()` with the same settings as you did above for `mr_download_17lands_file()` (actually, `mr_open_17lands_arrow()` will download the file automatically if it's not there yet, so we could have skipped the previous step; that was just to illustrate where the file gets saved and to check the file size).
+
+```{r open-ktk}
+ktk_replay_data <- mr_open_17lands_arrow("KTK", "replay", "premier")
+```
+
+If you check the results of `mr_open_17lands_arrow()` by typing `ktk_replay_data` directly, you will get a very long list of column names and their corresponding data types, called "schema" in {arrow} parlance (here I have truncated the output to only first 20).
+
+```{r schema-show, eval = FALSE}
+ktk_replay_data
+```
+
+```{r schema-hide, echo = FALSE}
+customPrint(ktk_replay_data)
+```
+
+Once again, the reason that we see a schema and not the actual data is that we have not loaded the data into R yet, we have only made a connection to the file.
+
+We can check the dimensions of the dataset without reading it in, by using `dim()` as usual:
+
+```{r dim}
+dim(ktk_replay_data)
+```
+
+```{r dim-hide, echo = FALSE}
+dim_data <- dim(ktk_replay_data)
+```
+
+That is pretty big: `r pretty_num(dim_data[1])` rows by `r pretty_num(dim_data[2])` columns (and KTK isn't even that big; last I checked, WOE had >1 million rows).
+The reason the game data are so large is that each row is a single game, and the columns account for every action taken on every turn.
+I don't have the time to go into the details here, but suffice to say there are a lot of columns.
+
+## Analyze the data
+
+OK, now that we have opened the dataset, it's finally time to do something with it!
+
+For demonstration purposes, let's use the dataset to analyze the **win-rate of cards in the user's opening hand**.
+
+First, let's make a vector of columns that we are interested in to subset the data:
+
+```{r set-cols}
+# Columns we are interested in:
+# - whether the user won or or not
+# - all the columns that tell us what they had in their opening hand
+#   (including tutored cards, but that seems pretty unlikely!)
+turn_1_card_cols <- c(
+  # "draft_time",
+  "won",
+  "user_turn_1_cards_drawn",
+  "user_turn_1_cards_tutored",
+  "user_turn_1_creatures_cast",
+  "user_turn_1_eot_user_cards_in_hand",
+  "user_turn_1_lands_played",
+  "user_turn_1_non_creatures_cast")
+```
+
+Next, use `dplyr`-like syntax to subset to only the columns we are interested in from the data (the `select()` function), and combine this with `collect()` from `{arrow}`.
+That last step is different from normal `dplyr` pipelines: `{arrow}` will hold off on doing any actual calculations on the data until you tell it to do so with `collect()`.
+That is what enables it to handle large, out-of-memory datasets.
+
+```{r select-collect}
+ktk_turn_1 <-
+  ktk_replay_data |>
+  select(won, all_of(turn_1_card_cols)) |>
+  collect()
+```
+
+The output of `collect()` is a dataframe (tibble).
+This is **much smaller** than the original replay dataframe, so we will have no problem working with it in R as usual.
+
+```{r show-collect-res}
+ktk_turn_1
+```
+
+In general, you typically don't need *all* the columns for a given analysis; you should be able to use this approach to only subset to those you're interested in, then work with the data as a dataframe from there.
+
+The following code sets a threshold of number of games played for each card (in other words, dropping cards with insufficient data), then calculates the win-rate per card in the opening hand.
+None of this uses `{arrow}`, since we are now working with an in-memory dataframe.
+It's just good-old `tidyverse`-style data wrangling.
+
+```{r calc-win-rate}
+# Calculate the cutoff value (.25% of the total number of rows)
+# to exclude cards that have insufficient data
+cutoff_value <- 0.0025 * nrow(ktk_turn_1)
+
+ktk_opening_hand_wr <-
+  ktk_turn_1 |>
+  mutate(id = seq_len(nrow(ktk_turn_1))) |>
+  pivot_longer(names_to = "what", values_to = "card", -c(id, won)) |>
+  filter(!is.na(card)) |>
+  select(id, won, card) |>
+  separate_longer_delim(card, delim = "|") |>
+  mutate(
+    won = as.logical(won),
+    card = as.numeric(card)) |>
+  unique() |>
+  group_by(card) |>
+  summarize(
+    n_win = sum(won),
+    n_total = n_distinct(id)
+  ) |>
+  filter(n_total > cutoff_value) |>
+  mutate(win_rate = n_win / n_total) |>
+  arrange(desc(win_rate))
+
+ktk_opening_hand_wr
+```
+
+There's one last detail: the cards are labeled with a code (ID number), not their actual names!
+
+Fortunately, 17lands provides a dataset that links these card IDs to actual card names:
+
+```{r get-card-names}
+card_names <- readr::read_csv("https://17lands-public.s3.amazonaws.com/analysis_data/cards/cards.csv")
+
+card_names
+```
+
+Let's do a join operation to go from card ID to card name and drop basic lands:
+
+```{r join}
+ktk_opening_hand_wr |>
+  left_join(select(card_names, card = id, name)) |>
+  filter(!name %in% c("Swamp", "Plains", "Island", "Mountain", "Forest"))
+```
+
+You can verify that this matches up with the opening-hand win-rate (`OH WR`) available in the[17lands card data](https://www.17lands.com/card_data?expansion=KTK&format=PremierDraft&start=2014-09-26&columns=opening&sort=opening_hand_win_rate%2Cdesc) (exact numbers will vary because the public dataset doesn't include exactly the same dataset as that used to calculate the stats available on the card stats page; I recommend filtering the data by date to help with this).
+
+## Wrap-up
+
+This vignette showed how you can analyze very large MtG datasets in R with `{arrow}` and `{mtgr}`.
+
+The analysis I demonstrated here was obviously not anything new, but I hope the methods explained in the vignette help you generate new insights with your own analyses.
+
+Enjoy!
