@@ -1,54 +1,20 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>/404.html</loc>
-  </url>
-  <url>
-    <loc>/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>/articles/arrow.html</loc>
-  </url>
-  <url>
-    <loc>/articles/download-cache.html</loc>
-  </url>
-  <url>
-    <loc>/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>/authors.html</loc>
-  </url>
-  <url>
-    <loc>/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/mr_cache_dir.html</loc>
-  </url>
-  <url>
-    <loc>/reference/mr_download_17lands_file.html</loc>
-  </url>
-  <url>
-    <loc>/reference/mr_get_17lands_cols.html</loc>
-  </url>
-  <url>
-    <loc>/reference/mr_get_17lands_data.html</loc>
-  </url>
-  <url>
-    <loc>/reference/mr_get_sets.html</loc>
-  </url>
-  <url>
-    <loc>/reference/mr_make_17lands_schema.html</loc>
-  </url>
-  <url>
-    <loc>/reference/mr_open_17lands_arrow.html</loc>
-  </url>
-  <url>
-    <loc>/reference/replay_cols.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>/404.html</loc></url>
+<url><loc>/LICENSE-text.html</loc></url>
+<url><loc>/LICENSE.html</loc></url>
+<url><loc>/articles/arrow.html</loc></url>
+<url><loc>/articles/download-cache.html</loc></url>
+<url><loc>/articles/index.html</loc></url>
+<url><loc>/authors.html</loc></url>
+<url><loc>/index.html</loc></url>
+<url><loc>/reference/index.html</loc></url>
+<url><loc>/reference/mr_cache_dir.html</loc></url>
+<url><loc>/reference/mr_download_17lands_file.html</loc></url>
+<url><loc>/reference/mr_get_17lands_cols.html</loc></url>
+<url><loc>/reference/mr_get_17lands_data.html</loc></url>
+<url><loc>/reference/mr_get_sets.html</loc></url>
+<url><loc>/reference/mr_make_17lands_schema.html</loc></url>
+<url><loc>/reference/mr_open_17lands_arrow.html</loc></url>
+<url><loc>/reference/replay_cols.html</loc></url>
 </urlset>
+

@@ -1,8 +1,7 @@
-pandoc: 2.19.2
-pkgdown: 2.0.7
+pandoc: 3.1.11
+pkgdown: 2.2.0
 pkgdown_sha: ~
 articles:
   arrow: arrow.html
   download-cache: download-cache.html
-last_built: 2024-02-20T04:01Z
-
+last_built: 2025-11-18T11:43Z
