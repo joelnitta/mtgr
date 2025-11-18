@@ -40,6 +40,10 @@ col_dat <-
   str_squish() %>%
   str_remove_all(",$")
 
+# Manual fix for user_total_cards_tutored
+col_dat <- c(col_dat, "^user_total_cards_tutored$, int8") |>
+  unique()
+
 # Make lookup table mapping python data types to arrow data types
 py_arrow_lookup_tbl <- tribble(
   ~py_type, ~arrow_type,
